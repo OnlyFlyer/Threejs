@@ -1,0 +1,419 @@
+/*
+	Created on 2017-04-12
+	@author: 吴涛
+	@summary: 安天静态网页样式
+	@version: 0.1
+*/
+*{
+	margin: 0;
+	padding: 0;
+}
+ul,ol{
+	list-style: none;
+}
+a{
+	text-decoration: none;
+}
+div, table, img{
+    border: 0;
+    margin: 0;
+    padding: 0px;
+    text-align: justify;
+}
+.header{
+	box-shadow: 0px 2px 4px #6A6A6A;
+	width: 100%;
+	height: 137px;
+	position: fixed;
+	background: #fff repeat-x 0% 0%;
+	margin-bottom: 10px;
+	z-index: 100;
+}
+.header .w{
+	position: relative;
+	width: 950px;
+	margin: 0 auto;
+}
+.header .w .language{
+	width: 100%;
+	height: 18px;
+	line-height: 18px;
+	float: right;
+	/*background: blue;*/
+	/*display: block;*/
+	text-align: right;
+	color: #fff;
+	font-size: 12px;
+}
+.header .w .topbox{
+	width: 100%;
+	float: left;
+}
+.header .topbox .logo{
+	float: left;
+	padding-top: 20px;
+}
+.header .in_share{
+	float: right;
+	position: relative;
+	width: 175px;
+	margin-top: 20px;
+	z-index: 9;
+}
+a.bshareDiv .bsPromo.bsPromo1, div.bshare-custom .bsPromo.bsPromo1{
+    width: 51px;
+    height: 18px;
+    top: -18px;
+    left: 0;
+    line-height: 16px;
+    font-size: 12px !important;
+    font-weight: normal !important;
+    color: #fff;
+    text-align: center;
+    background: red;
+    /*background: url(http://static.bshare.cn/frame/images/bshare_box_sprite2.gif) no-repeat 0 -606px;*/
+}
+.header .in_share a{
+    float: right;
+    margin-left: 10px;
+    width: 26px;
+    height: 26px;
+    overflow: hidden;
+    cursor: pointer;
+}
+.header .in_share a.wx{
+    background: url(../image/ind_24.png) -34px 0 no-repeat;
+    /*background: blue;*/
+}
+.header .in_share .wx_con{
+    display: none;
+    height: 170px;
+    position: absolute;
+    top: 26px;
+    width: 170px;
+    z-index: 99;
+}
+.header .in_share a.sina{
+    background: url(../image/ind_24.png) 0 0 no-repeat;
+    /*background: red;*/
+}
+.header .nav{
+    padding: 22px 0 0;
+    float: left;
+    width: 100%;
+    height: 36px;
+    line-height: 36px;
+    position: relative;
+    z-index: 2;
+}
+.header .nav li{
+    float: left;
+    width: 135px;
+    line-height: 36px;
+    font-size: 13px;
+    text-align: center;
+    cursor: pointer;
+    /*background: url(dot01.gif) right center no-repeat;*/
+    position: relative;
+}
+.header .nav li dl{
+    margin-left: 15px;
+    position: absolute;
+    top: 35px;
+    background: #fafafa;
+    border: 1px solid #ccc;
+    left: 0;
+    font-size: 14px;
+    width: 422px;
+    display: none;
+    padding: 0 0 0 33px;
+}
+.header .nav li dl dd{
+    margin-right: 36px;
+    float: left;
+    min-width: 171px;
+    text-align: left;
+}
+.header .nav li a{
+    color: #222222;
+    display: block;
+    position: relative;
+    z-index: 2;
+    font-size: 16px;
+    font-family: "微软雅黑";
+}
+.main{
+    padding-top: 130px;
+    position: relative;
+    /*height: 100%;*/
+    width: 100%;
+    z-index: 1;
+    background: #eee left top repeat-x #E0E0E0;
+    /*background: url(main_bg.png) left top repeat-x #E0E0E0;*/
+    overflow: hidden;
+}
+.banner{
+    width: 1400px;
+    z-index: 11;
+    left: 50%;
+    top: 0;
+    margin-left: -700px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+.ban_img {
+    position: relative;
+    width: 100000000px;
+    left: 0;
+}
+.ban_img li{
+    float: left;
+    width: 1400px;
+    max-height: 430px;
+}
+.ban_img li img {
+    width: 100%;
+    text-align: center;
+}
+/*img {
+    vertical-align: top;
+}*/
+.ban_ico{
+    position: absolute;
+    z-index: 11;
+    bottom: 24px;
+    height: 33px;
+    width: 950px;
+    left: 50%;
+    text-align: right;
+    margin-left: -475px;
+}
+.ban_ico li {
+    display: inline-block;
+    zoom: 1;
+    margin: 0px 5px;
+    height: 33px;
+    cursor: pointer;
+}
+.ban_ico li img {
+    width: 50px;
+    height: 26px;
+    vertical-align: middle;
+    border: 1px solid #858688;
+    border-radius: 3px;
+    /*filter: url(data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'><filter i…0 0 0.5 0.5 0.5 0 0 0.5 0.5 0.5 0 0 0 0 0 1 0\'/></filter></svg>#grayscale);
+    filter: gray;*/
+    -webkit-filter: grayscale(100%);
+}
+.ban_ico li.selected{
+	border: 1px solid black;
+	width: 52px;
+	height: 28px;
+}
+/*
+    @version:0.2
+    @author: 吴涛
+    @summary: section补充及footer
+*/
+.newscroll {
+    width: 100%;
+    height: 34px;
+    margin: 1px 0;
+    background: url(../image/dot02.jpg) left top repeat-x;
+}
+.w{
+    width: 950px;
+    margin: 0px auto;
+    position: relative;
+}
+.fl{
+    float: left;
+}
+.fr{
+    float: right;
+}
+.ntit{
+    float: left;
+    width: 78px;
+    height: 34px;
+    line-height: 34px;
+    color: #00A0EA;
+    font-weight: bold;
+}
+#slidePrev, #slidePrev1{
+    float: left;
+    width: 21px;
+    height: 34px;
+    background: url(../image/dot05.png) left center no-repeat;
+}
+#slideNext, #slideNext1{
+    float: right;
+    width: 21px;
+    height: 34px;
+    background: url(../image/dot05.png) right center no-repeat;
+}
+/*
+    缺
+*/
+#Mainbox{
+    padding: 20px 10px 25px 10px;
+    background: #d9d9d9;
+}
+.Wrap{
+    margin: 0 auto;
+    width: 950px;
+    text-align: left;
+}
+.leftside{
+    width: 100%;
+    margin-right: 5px;
+}
+#imgPlay{
+    overflow: hidden;
+    width: 100%;
+    zoom: 1;
+    position: relative;
+    height: 211px;
+    margin-bottom: 10px;
+}
+#imgPlay .imgs li:nth-child(1){
+    margin-left: 0;
+}
+#imgPlay .imgs li {
+    float: left;
+    position: relative;
+    margin-left: 25px;
+}
+.imgPlay_mark{
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 300px;
+    cursor: pointer;
+}
+.imgPlay_mark_content{
+    background: rgba(0, 0, 0, 0.65) none repeat scroll 0 0 !important;
+    /*filter: Alpha(opacity=40);*/
+    /*background: #000000;*/
+    position: absolute;
+    /*bottom: -50px;*/
+    width: 300px;
+    height: 134px;
+}
+.imgPlay_mark_content h1{
+    padding-top: 8px;
+    font-size: 14px;
+    padding-left: 20px;
+    color: #ffffff;
+}
+.imgPlay_up{
+    background: url(../image/banner_arrow.png) no-repeat;
+}
+.imgPlay_down{
+    background: url(../image/banner_arrow_down.png) no-repeat;
+}
+.imgPlay_mark_btn{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 8px;
+    height: 8px;
+    cursor: pointer;
+}
+.imgPlay_mark_content p{
+    line-height: 1.5em;
+}
+.imgPlay_mark_content p{
+    font-size: 12px;
+    padding-top: 4px;
+    padding-left: 20px;
+    padding-right: 13px;
+    position: relative;
+    /*color: #6dbf23;*/
+}
+.text_price_ad a{
+    color: #ff9c00;
+    font-size: 12px;
+}
+.text_portal{
+    color: #fff!important;
+    font-size: 12px;
+    height: 20px;
+    overflow: hidden;
+    word-break: keep-all;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.text_visible{
+    height: auto;
+    max-height: 70px;
+    min-height: 70px;
+    word-break: break-all;
+    overflow: hidden;
+    color: #fff !important;
+}
+.footlist {
+    width: 100%;
+    min-height: 284px;
+    height: auto;
+    background: #4C4C4C;
+    overflow: hidden;
+}
+.footlist .flist{
+    margin-bottom: 10px;
+}
+.flist dl{
+    float: left;
+    width: 153px;
+    padding-left: 80px;
+    border-right: 1px solid #595959;
+}
+.flist dl dt{
+    padding: 35px 0 20px;
+}
+.flist dl dd{
+    line-height: 26px;
+    font-size: 12px;
+}
+.flist dl dt a{
+    color: #ffffff;
+}
+.flist dl dd a{
+    color: #C6C6C6;
+}
+.footer{
+    width: 100%;
+    height: 70px;
+    padding: 10px 0;
+    line-height: 26px;
+    background: #2D2D2D;
+    font-size: 12px;
+}
+.footer ul{
+    float: left;
+    line-height: 26px;
+    margin-left: -12px;
+}
+.footer ul li {
+    float: left;
+    padding: 0px 12px;
+    background: url(../image/dot04.jpg) right center no-repeat;
+}
+.footer ul li.last{
+    background: none;
+}
+.footer ul li a{
+    color: #F2F2F2;
+}
+.footer .copy{
+    float: left;
+    color: #ACABAB;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.footer .copy em{
+    text-transform: uppercase;
+}
+.copy a{
+    color: #C6C6C6;
+}

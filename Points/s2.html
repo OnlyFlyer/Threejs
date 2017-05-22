@@ -1,0 +1,94 @@
+<!-- 
+	Created On 2017-05-11
+	@author:吴涛
+	@summary:粒子练习
+	@version:v0.9
+ -->
+
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+ 	<meta charset="UTF-8">
+ 	<title>Document</title>
+ </head>
+ <body>
+ 	<script src="./lib/three.js"></script>
+ 	<script>
+ 		var scene,camera,renderer;
+ 		var render;
+
+ 		var mouseX=0,mouseY=0;
+ 		var point;
+
+ 		init();
+ 		animate();
+
+ 		function init(){
+ 			scene = new THREE.Scene();
+
+ 	//参数:可视角度50,长宽比0,深度剪切面的近的距离(正0.1),远(正2000)
+ 			camera = new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight,1,1000);
+
+ 			renderer = new THREE.WebGLRenderer();
+ 			renderer.setSize(window.innerWidth,window.innerHeight);
+ 			// renderer.setClearColor('red', 1);
+
+ 			document.body.appendChild(renderer.domElement);
+createPoints();
+ 			window.addEventListener('resize', onWindowResize, false);
+
+ 			document.addEventListener('mousemove', onMouseMove, false);
+ 			// document.addEventListener('touchstart', onTouchStart, false);
+ 			// document.addEventListener('touchmove', onTouchMove, false);
+ 		}
+
+
+ 		function createPoints(){
+ 			var geo = new THREE.CircleGeometry(20,100);
+ 			var mater = new THREE.PointsMaterial({
+ 				// size:5,
+ 				color:Math.random()*0xffffff
+ 			});
+ 			for(var i=0; i<10000; i++){
+ 				var star = new THREE.Vector3();
+ 				star.x = THREE.Math.randFloatSpread(200);
+ 				star.y = THREE.Math.randFloatSpread(200);
+ 				star.z = THREE.Math.randFloatSpread(200);
+ 				geo.vertices.push(star);
+ 			}
+ 			point = new THREE.Points(geo,mater);
+ 			scene.add(point);
+ 		}
+ 		function onWindowResize(){
+ 			renderer.setSize(window.innerWidth,window.innerHeight);
+ 		}
+
+ 		function onMouseMove(event){
+ 			camera.apect = window.innerWidth/window.innerHeight;
+ 			camera.updateProjectionMatrix();
+ 			mouseX = event.clientX - window.innerWidth/2;
+ 			mouseY = event.clientY - window.innerHeight/2;
+ 		}
+
+ 		function animate(){
+ 			requestAnimationFrame(animate);
+ 			render();
+ 		}
+
+ 		function render(){
+ 			camera.position.x += (mouseX - camera.position.x) * 0.05;
+			camera.position.y += (-mouseY - camera.position.y) * 0.05;
+			camera.lookAt(scene.position);
+
+ 			point.rotation.x +=0.01;
+ 			point.rotation.y +=0.02;
+
+
+ 			renderer.render(scene, camera);
+ 		}
+
+
+
+ 	</script>
+ </body>
+ </html>

@@ -1,0 +1,35 @@
+//关于精灵和粒子的性能测试和结论
+
+{
+	"title":"本文用于记录Threejs中粒子Point和精灵Sprite的性能,分以下三个方面记录的数据",
+	"count":{
+		"count_1":"Points:(内存Max:17M,CPUMax:5.1),Sprite:(内存Max:18M,CPUMax:5.8),GPU与CPU同比增长",
+		"count_10":"Points:(内存Max:20M,CPUMax:6.2),Sprite:(内存Max:25M,CPUMax:6.2),GPU与CPU同比增长",
+		"count_100":"Points:(内存Max:20M,CPUMax:5.1),Sprite:(内存Max:21M,CPUMax:5.1),GPU与CPU同比增长",
+		"count_1000":"Points:(内存Max:27M,CPUMax:4.3),Sprite:(内存Max:35M,CPUMax:10.9),GPU与CPU同比增长",
+		"count_10000":"Points:(内存Max:34M,CPUMax:4.7),Sprite:(内存Max:100M,CPUMax:17),GPU与CPU同比增长",
+		"count_100000":"Points:(内存Max:35M,CPUMax:5.1),Sprite:(内存Max:崩溃,CPUMax:崩溃),GPU与CPU同比增长"
+	},
+	"material":{
+		"texture1":"Points:(内存Max:24M,CPUMax:3.5),Sprite:(内存Max:20M,CPUMax:5.7),GPU与CPU同比增长",
+		"texture2":"Points:(内存Max:20M,CPUMax:2.1),Sprite:(内存Max:20M,CPUMax:4.3),GPU与CPU同比增长",
+		"texture3":"Points:(内存Max:20M,CPUMax:3.7),Sprite:(内存Max:25M,CPUMax:4.3),GPU与CPU同比增长"
+	},
+	"clickEvent":{
+		"clickAlert":{
+			"点击前":"Points:(内存Max:25M,CPUMax:3.5),Sprite:(内存Max:18M,CPUMax:6.1)",
+			"点击后":"Points:(内存Max:19M,CPUMax:0),Sprite:(内存Max:18M,CPUMax:0)"
+		},
+		"clickDiv":{
+			"点击前":"Points:(内存Max:21M,CPUMax:4.7),Sprite:(内存Max:20M,CPUMax:4.3)",
+			"点击后":"Points:(内存Max:22M,CPUMax:0),Sprite:(内存Max:21M,CPUMax:4.3)"
+		}
+	}
+}
+//------------------------------------------------------------------------------------------
+//总结:1.  当粒子和精灵的数量较少时:两者性能上面差不多,
+//	   2.  当达到一定数量之后,sprite的性能低于points的性能
+//     3.  且points加载速度明显快于sprite
+//     4.  points和sprite均无法加载动图当作纹理,即使加载也会变为静态图
+//     5.  点击效果为alert时，点击后CPU不占用空间,均为零,由此可看出alert会阻塞程序运行
+//------------------------------------------------------------------------------------------

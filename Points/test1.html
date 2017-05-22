@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>test1</title>
+</head>
+<body>
+<script src="./js/allFn.js"></script>
+<script src="./lib/three.js"></script>
+<script>
+var scene,camera,renderer;
+var stats,controls;
+var render;
+init();
+
+function init(){
+    //scene
+    scene = new THREE.Scene();
+    //camera
+    camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 1, 1000);
+    camera.position.z = 100;
+    //renderer
+    renderer = new THREE.WebGLRenderer();
+
+    renderer.setSize(window.innerWidth,window.innerHeight);
+//    renderer.setClearColor('green', 1);
+    //add to body//
+    document.body.appendChild(renderer.domElement);
+
+//    createPoints();
+    createPoint();
+    window.addEventListener('resize',onWindowResize, false);
+    //renderer渲染
+    render();
+}
+</script>
+</body>
+</html>

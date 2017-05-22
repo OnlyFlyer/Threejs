@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form action="">
+    First Name:<input type="text" id="text1" onkeyup="showHint(this.value);">
+</form>
+<p>Suggestions:<span id="txtHint"></span></p>
+<script>
+    function showHint(str){
+        if(str.length == 0){
+            document.getElementById('textHint').innerHTML = '';
+            return;
+        }
+        xmlHttp = GetXmlHttpObject();
+//        xmlHttp = new XMLHttpRequest();
+        if(xmlHttp == null){
+            alert('您的浏览器不支持AJAX!');
+            return;
+        }
+        var url = 'gethint.asp';
+        url = url += "?q=" + str;
+        url =  url + "&sid=" + Math.random();
+        xmlHttp.onreadystatechange = stateChanged;
+        xmlHttp.open('GET', url, true);
+        xmlHttp.send(null);
+    }
+
+    function GetXmlHttpObject(){
+        var xmlHttp = null;
+        try{
+            //Firefox,Opera 8.0+, Safari
+            xmlHttp = new XMLHttpRequest();
+        }catch(e){
+            //Internet Explorer
+            try{
+                xmlHttp = new ActiveXObject('Msxml2.XMLHTTP');
+            }catch(e){
+                xmlHttp = new ActiveObject('Microsoft.XMLHTTP');
+            }
+        }
+        return xmlHttp;
+    }
+
+    function stateChanged(){
+        if(xmlHttp.readyState == 4){
+            document.getElementById('txtHint').innerHTML = xmlHttp.responseText;
+        }
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>s5</title>
+</head>
+<body>
+<script src="./lib/three.js"></script>
+<script src="./lib/dat.gui.min.js"></script>
+<script>
+	var scene,camera,renderer;
+
+	var stats,datGui;
+
+	var render;
+	var mouseX=0,mouseY=0;
+	var group;
+
+	init();
+	animate();
+
+	function init(){
+		scene = new THREE.Scene();
+
+		camera = new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight,1,1000);
+
+		// camera.position.z = 10;
+
+		renderer = new THREE.WebGLRenderer();
+		renderer.setSize(window.innerWidth, window.innerHeight);
+
+		renderer.setClearColor('black', 1);
+
+		document.body.appendChild(renderer.domElement);
+		createSprite();
+		window.addEventListener('resize', onWindowResize, false);
+		document.addEventListener('mousemove', onMouseMove, false);
+
+	}
+
+	function createSprite(){
+
+		var spriteMap1 = new THREE.TextureLoader().load('./textures/sprite0.png');
+		group = new THREE.Group();
+		console.log(spriteMap1);
+		// var spriteMap2 = new THREE.Texture('./textures/sprite1.png');
+		for(var i=0; i<1000; i++){
+			//材质
+			var spriteMaterial = new THREE.SpriteMaterial({
+				map:spriteMap1,
+				color:0x00ee00
+			});
+			var sprite = new THREE.Sprite(spriteMaterial);
+			sprite.scale.set(50,50,1);
+			sprite.position.x = THREE.Math.randFloatSpread(2000);
+			sprite.position.y = THREE.Math.randFloatSpread(2000);
+			sprite.position.z = THREE.Math.randFloatSpread(2000);
+
+			group.add(sprite);
+		}
+		
+		scene.add(group);
+	}
+
+
+
+
+
+
+
+	function onWindowResize(){
+		renderer.setSize(window.innerWidth, window.innerHeight);
+	}
+
+	function onMouseMove(event){
+		camera.aspect = window.innerWidth/window.innerHeight;
+		camera.updateProjectionMatrix();
+
+		mouseX = event.clientX - window.innerWidth/2;
+		mouseY = event.clientY - window.innerHeight/2;
+	}
+
+	function animate(){
+		requestAnimationFrame(animate);
+		render();
+	}
+
+	function render(){
+		camera.position.x = (mouseX - camera.position.x)*0.5;
+		camera.position.y = (-mouseY - camera.position.y)*0.5;
+
+		renderer.render(scene, camera);
+	}
+</script>
+</body>
+</html>

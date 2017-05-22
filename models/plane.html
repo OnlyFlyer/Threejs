@@ -1,0 +1,73 @@
+<!--
+	Created on 2017-04-14
+	@author:吴涛
+	@summary: 创建平面函数
+	@version: 0.1
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<style>
+	*{
+		padding: 0;
+		margin: 0;
+	}
+	canvas{
+		width: 100%;
+		height: 100%;
+		background: red;
+	}
+	ul,ol{
+		list-style: none;
+	}
+	a{
+		text-decoration: none;
+	}
+/*	canvas{
+		background: red;
+	}*/
+</style>
+<body>
+<!-- <canvas id="can"></canvas> -->
+<script src="three.js"></script>
+<script>
+createPlane(0,-1.6,5);
+function createPlane(a,b,c){
+	var scene = new THREE.Scene();
+	var renderer = new THREE.WebGLRenderer();
+	renderer.setSize(window.innerWidth,window.innerHeight);
+	// renderer.domElement.style.background = 'red';
+	renderer.setClearColor('#808080', 1);
+	console.log(renderer);
+	var camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight,  0.1, 1000);
+	document.body.appendChild(renderer.domElement);
+	var geometry = new THREE.BoxGeometry(4, 4, 0.01,10,10,1);
+	var material = new THREE.MeshBasicMaterial({
+		wireframe:true,
+		color: '#eee',
+		transparent: true,
+		opacity: 0.3,
+		wireframeLinewidth:2
+	});
+	var plane = new THREE.Mesh(geometry, material);
+	plane.rotation.x = Math.PI/2;
+	// plane.position.set( 0, 0, 0);
+	camera.position.set(a,b,c);
+	// camera.position.x = 5;
+	scene.add(plane);
+	var render = function(){
+		requestAnimationFrame(render);
+		plane.rotation.z += -0.005;
+		// plane.rotation.z +=0.005;
+		renderer.render(scene,camera);
+	};
+	render();
+}		
+</script>
+</body>
+</html>
+
+ 

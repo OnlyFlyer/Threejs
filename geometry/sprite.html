@@ -1,0 +1,79 @@
+<!-- 
+	Created On 2017-05-19
+	@author:吴涛
+	@summary:sprite与point性能测试
+	@version:v0.1
+ -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>sprite</title>
+</head>
+<body>
+	<script src="../lib/three.js"></script>
+	<script src="../js/dat.gui.min.js"></script>
+	<script src="../js/stats.min.js"></script>
+	<script src="../controls/OrbitControls.js"></script>
+	<script>
+		var scene,camera,renderer;
+
+		var stats,controls,render;
+
+		var gui,guiControls;
+
+		init();
+		animate();
+
+		function init(){
+			scene = new THREE.Scene();
+
+			camera = new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight,1,1000);
+			camera.position.set(0,0,50);
+			scene.add(camera);
+
+			renderer = new THREE.WebGLRenderer();
+
+			renderer.setSize(window.innerWidth, window.innerHeight);
+			renderer.setClearColor(new THREE.Color(0xffffff,1));
+
+			document.body.appendChild(renderer.domElement);
+
+
+			stats = new Stats();
+			stats.domElement.style.position = 'absolute';
+			stats.domElement.style.top = '0px';
+			document.body.appendChild(stats.domElement);
+
+			controls = new THREE.OrbitControls(camera,renderer.domElement);
+			controls.damping = 0.2;
+
+
+
+
+			var spriteMap = new THREE.TextureLoader().load('../textures/sprite0.png');
+			var spriteMat = new THREE.SpriteMaterial({
+				map:spriteMap
+			});
+
+			var sprite = new THREE.Sprite(spriteMat);
+			sprite.scale.set(10, 10, 1);
+			scene.add(sprite);
+
+
+
+
+		}
+
+		function animate(){
+			requestAnimationFrame(animate);
+			render();
+		}
+
+		function render(){
+			renderer.render(scene, camera);
+		}
+	</script>
+</body>
+</html>

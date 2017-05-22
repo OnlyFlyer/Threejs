@@ -1,0 +1,202 @@
+<!-- 
+	Created On 2017-04-27
+	@author:吴涛
+	@summary:测试功能用的网页
+ -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>	
+	<link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+<button id="btn">开始旋转</button>
+<button id="quickly">quikly</button>
+<button id="btnClose">停止旋转</button>
+<button id="slowly">slowly</button>
+<button id="move">开始移动</button>
+<button id="moveStop">停止移动</button>
+<div id="Econtainer">
+	<div id="Emask"></div>
+	<div id="Econtent">
+		<div id="Edemo-title">
+			<div id="Etitle">个人信息</div>
+			<div id="Eclose">[X]</div>
+		</div>
+
+		<div id="Emain">
+			<p></p>
+			<p></p>
+			<p></p>
+		</div>
+	</div>
+</div>
+<div id="container"></div>
+<script src="../Points/lib/jquery-3.2.1.min.js"></script>
+<script src="../Points/lib/three.js"></script>
+<script src="./controls/OrbitControls.js"></script>
+<script src="./js/bootstrap.js"></script>
+<script src="./js/ThreeCSG.js"></script>
+<script src="../Points/lib/stats.min.js"></script>
+<script src="./js/allFn.js"></script>
+<script src="./js/allClass.js"></script>
+<!-- <script src="controls/TransformControls.js"></script> -->
+<script>
+	var scene,camera,renderer;
+	var controls;
+	var clickGroup = [];
+	var stats;
+	var render;
+
+	var oMove = document.getElementById('move');
+	var oMoveStop = document.getElementById('moveStop');	
+	var oContainer = document.getElementById('container');
+
+	var oEContainer = document.getElementById('Econtainer');
+	var raycaster = new THREE.Raycaster();
+	var mouse = new THREE.Vector2();
+	var oEMain = document.getElementById('Emain');
+
+	var oEClose = document.getElementById('Eclose');
+	var xyz=0;
+	var oBtn = document.getElementById('btn');
+	var oBtnClose = document.getElementById('btnClose');
+
+
+	var oQuick = document.getElementById('quickly');
+	var oSlow = document.getElementById('slowly');
+
+	var rotaz = 50;
+	var rotay = -5;
+	var rotax = 0;	
+	var rotaxx = 0;
+	var rotayy = 0;
+	var rotazz = 0;
+	var timer;
+
+	var floorB;	
+	init();
+	
+function init(){
+	//scene
+	scene = new THREE.Scene();  
+
+	//camera/照相机
+	camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+
+	//renderer/渲染器
+	renderer = new THREE.WebGLRenderer();
+
+	//canvas宽高
+	renderer.setSize(window.innerWidth, window.innerHeight);
+	renderer.setClearColor('#808080', 1);
+
+	renderer.domElement.id = 'can';
+	
+	oContainer.appendChild(renderer.domElement);
+
+	//stats
+	stats = new Stats();
+	stats.domElement.style.position = 'absolute';
+	stats.domElement.style.top = '0px';
+	oContainer.appendChild(stats.domElement);
+
+	//控制器
+	controls = new THREE.OrbitControls(camera, renderer.domElement);
+	controls.damping = 0.2;
+
+	camera.position.set(rotax,rotay,rotaz);
+	camera.lookAt(new THREE.Vector3(rotaxx,rotayy,rotazz));
+			
+	//创建外壳
+	allClass.shell();
+	//创建四个楼层
+	allClass.sumPlane();
+	//办公桌综合
+	allClass.sumGoods();
+
+	//电脑综合
+	allClass.sumCompu();	
+	//线路综合
+	allClass.sumLine();
+	//楼梯综合
+	allClass.sumStairs();
+	//创建左右楼梯开口
+	allClass.gap();
+	//创建墙面
+	createCompu(3,0,-0.5,[2,6,0.1],'#F0FFFF');
+	createCompu(-3,0,-0.5,[2,6,0.1],'#F0FFFF');
+	//电梯
+	//createCompu(3.2,0,-3.2,[1.6,10,1.6],'#2F4F4F');
+	//createCompu(-3.2,0,-3.2,[1.6,10,1.6],'#2F4F4F');
+	//绑定屏幕尺寸变化事件
+	window.addEventListener( 'resize', allClass.onWindowResize, false );
+	//点击人物事件
+	window.addEventListener( 'click', allClass.onClick, false );
+
+	oMove.onclick = function(){
+		allClass.rotation();
+	};
+	oMoveStop.onclick = function(){
+		clearInterval(timer);
+	};
+	//弹层组件
+	oEClose.onclick = function(){
+		oEContainer.style.display = 'none';
+	};
+	//旋转事件
+	oBtn.onclick = function(){
+		xyz = 0.005;
+		//加速旋转
+		oQuick.onclick = function(){
+			xyz+=0.01;
+		};
+		//减缓旋转
+		oSlow.onclick = function(){
+			xyz-=0.1;
+			if(xyz<0){
+				xyz=0;
+			}
+		}	
+	};
+	oBtnClose.onclick = function(){
+		xyz = 0;
+	};
+
+//init函数结尾	
+}
+
+//渲染
+render = function(){
+	requestAnimationFrame(render);
+	renderer.render(scene, camera); 
+	scene.rotation.y += xyz;
+	stats.update();		
+};
+render();
+</script>
+</body>
+</html>
+<!-- 创建人头像 -->
+<!-- // createHeader();
+// function createHeader(){
+// 	var material = new THREE.MeshPhongMaterial({
+// 		color:0xddd,
+// 		specular:0x222,
+// 		shininess:35,
+// 		map:THREE.ImageUtils.loadTexture('./obj/leeperrysmith/Map-COL.jpg'),
+// 		specularMap: THREE.ImageUtils.loadTexture('./obj/leeperrysmith/Map-SPEC.jpg'),
+// 		normalMap: THREE.ImageUtils.loadTexture('./obj/leeperrysmith/Infinite-Level_02_Tangent_SmoothUV.jpg'),
+// 		normalScale: new THREE.Vector2(0.8, 0.8)
+// 	});
+// 	// var geometry = new THREE.l
+// 	loader = new THREE.JSONLoader();
+// 	loader.load('./obj/leeperrysmith/LeePerrySmith.js', function(geometry){
+// 		var mesh = new THREE.Mesh(geometry, material);
+// 		mesh.position.y = -50;
+// 		// mesh1.scale.x = mesh1.scale.y = mesh1.scale.z = scale;
+// 		scene.add(mesh);
+// 		} 
+// 	);
+// }

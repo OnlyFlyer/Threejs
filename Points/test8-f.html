@@ -1,0 +1,159 @@
+<!-- 
+	Created On 2017-05-11
+	@author:吴涛
+	@summary:粒子学习
+	@version:v0.7
+ -->
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title></title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	</head>
+
+	<body>
+		<script src="./lib/three.js"></script>
+
+		<script>
+
+			var camera, scene, renderer;
+			var render,parameters, i, h, color, sprite, size;
+			var particles;
+			var render;
+
+			var group,material = [];
+
+			init();
+			// animate();
+			function init(){
+				scene = new THREE.Scene();
+				scene.fog = new THREE.FogExp2(0x000000, 0.0008);
+				camera = new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight,1,2000);
+
+				renderer = new THREE.WebGLRenderer();
+				renderer.setSize(window.innerWidth, window.innerHeight);
+				renderer.setClearColor('black', 1);
+				renderer.setPixelRatio(window.devicePixelRatio);
+
+				document.body.appendChild(renderer.domElement);
+
+				window.addEventListener('resize', onWindowResize, false);
+				createPoints();
+				render();
+			}
+
+			function createPoints(){
+				//几何图形
+				// var geo = new THREE.Geometry();
+				var geo = new THREE.Geometry();
+
+				var sprite1 = THREE.TextureLoader('textures/sprites/snowflake1.png');
+
+				var sprite2 = THREE.TextureLoader('textures/sprites/snowflake2.png');
+
+				var sprite3 = THREE.TextureLoader('textures/sprites/snowflake3.png');
+
+				var sprite4 = THREE.TextureLoader('textures/sprites/snowflake4.png');
+
+				var sprite5 = THREE.TextureLoader('textures/sprites/snowflake5.png');
+
+				for(var i=0; i<10000; i++){
+					var vertex = new THREE.Vector3();
+					vertex.x = Math.random()*2000-1000;
+					vertex.y = Math.random()*2000-1000;
+					vertex.z = Math.random()*2000-1000;
+
+					geo.vertices.push(vertex);
+				}
+
+				parameters = [
+					[[1.0, 0.2, 0.5], sprite2, 20],
+					[[0.95, 0.1, 0.5], sprite3, 15],
+					[[0.90, 0.05, 0.5], sprite1, 10],
+					[[0.85, 0, 0.5], sprite5, 8],
+					[[0.80, 0, 0.5],sprite4, 5]
+				];
+
+				for(var i=0; i<parameters.length; i++){
+					color = parameters[i][0];
+					sprite = parameters[i][1];
+					size = parameters[i][2];
+
+					material[i] = new THREE.PointsMaterial({
+						size:size,
+						map:sprite,
+						blending:THREE.AdditiveBlending,
+						depthTest:false,
+						transparent:true
+					});
+
+					material[i].color.setHSL(color[0], color[1], color[2]);
+
+					particle = new THREE.Points(geo, material);
+
+					particle.rotation.x = Math.random()*6;
+					particle.rotation.y = Math.random()*6;
+					particle.rotation.z = Math.random()*6;
+
+					scene.add(particle);
+
+					render();
+
+				}
+				// //纹理	
+				// var material = new THREE.PointsMaterial({
+				// 	color:'white',
+				// 	size:0.1
+				// });
+
+				// // for(var i=-5; i<5; i++){
+				// // 	for(var j=-5; j<5; j++){
+				// // 		var particle = new THREE.Vector3(i*10,j*10,0);
+				// // 		geo.vertices.push(particle);
+				// // 	}
+				// // }
+
+
+				// for(var i=0; i<1000; i++){
+				// 	var star = new THREE.Vector3();
+				// 	star.x = THREE.Math.randFloatSpread(200);
+				// 	star.y = THREE.Math.randFloatSpread(200);
+				// 	star.z = THREE.Math.randFloatSpread(200);		
+
+				// 	geo.vertices.push(star);
+				// }
+
+				// var system = new THREE.Points(geo,material);
+				// // system.scale.set(1000, 1000, 1)
+
+				// scene.add(system);
+
+			}
+    
+			// var geom = new THREE.TorusKnotGeometry(...);
+			// var knot = createParticleSystem(geom);
+
+			function onWindowResize(){
+				renderer.setSize(window.innerWidth, window.innerHeight);
+			}
+
+			function render(){
+				requestAnimationFrame(render);
+				renderer.render(scene, camera);
+			}
+
+		</script>
+	</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+

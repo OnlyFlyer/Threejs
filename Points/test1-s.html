@@ -1,0 +1,117 @@
+<!-- 
+	Created On 2017-05-10
+	@author:吴涛
+	@summary:point粒子学习
+	@version:v0.1
+ -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>test1</title>
+</head>
+<body>
+<script src="./lib/three.js"></script>
+<script src="./controls/OrbitControls.js"></script>
+<script>
+var scene,camera,renderer;
+var stats,controls;
+var render;	
+init();
+
+function init(){
+
+	scene = new THREE.Scene();
+
+	camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+
+	renderer = new THREE.WebGLRenderer();
+
+	renderer.setSize(window.innerWidth, window.innerHeight);
+	renderer.setClearColor('blue', 1);
+	
+	//控制器
+	controls = new THREE.OrbitControls(camera, renderer.domElement);
+	controls.damping = 0.2;	
+
+	document.body.appendChild(renderer.domElement);
+
+	createPoints();
+
+	window.addEventListener('resize', onWindowResize, false);
+	render = function(){
+		requestAnimationFrame(render);
+		renderer.render(scene, camera); 
+		// scene.rotation.y += 0.005;	
+	};
+	render();
+
+//init函数结尾
+}
+
+  
+function createPoints(){
+
+	var starsGeometry = new THREE.Geometry();
+
+	for(var i=0; i<1000; i++){
+		var star = new THREE.Vector3();
+		star.x = THREE.Math.randFloatSpread(200);
+		star.y = THREE.Math.randFloatSpread(200);
+		star.z = THREE.Math.randFloatSpread(200);
+
+		starsGeometry.vertices.push(star);
+	}
+
+	var starsMaterial = new THREE.PointsMaterial({
+		color:"red"
+	}); 
+
+	var starField = new THREE.Points(starsGeometry, starsMaterial);
+
+	console.log(starField);
+
+	scene.add(starField);
+}
+
+function onWindowResize(){
+
+	renderer.setSize(window.innerWidth, window.innerHeight);
+}
+
+
+// 	function createParticles(){
+// 		var geo = new THREE.Geometry();
+// 		var material = new THREE.PointsMaterial({
+// 			size:4,
+// 			vertexColors:true,
+// 			color:'red'
+// 		});
+// 		for(var x = -5; x<5; x++){
+// 			for(var y = -5; y<5; y++){
+// 				var particle = new THREE.Vector3(x*10,y*10,0);
+// 				geo.geometry.push(particle);
+// 				geo.colors.push(new THREE.Color(Math.random()*0x00ffff));
+			
+// 				}
+// 		}
+// 	var system = new THREE.ParticleSystem(geo, material);
+// 	scene.add(system);
+// }
+	
+
+// function createParticles0(){
+// 	var material = new THREE.PointsMaterial();
+// 	for(var x=-5; x<5; x++){
+// 		for(var y=-5; y<5; y++){
+// 			var particle = new THREE.Particle(material);
+// 			particle.position.set(x*10,y*10,0);
+// 			scene.add(particle);
+// 		}
+// 	}
+// }			
+
+</script>
+</body>
+</html>

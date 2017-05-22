@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+<script src="./lib/three.js"></script>
+<script>
+var scene,camera,renderer;
+var stats,controls;
+var render;
+init();
+
+function init(){
+	scene = new THREE.Scene();
+
+	camera = new THREE.PerspectiveCamera(75,window.innerWidth,window.innerHeight,0.1,1000);
+
+	renderer = new THREE.WebGLRenderer();
+	renderer.setSize(window.innerWidth, window.innerHeight);
+	renderer.setClearColor('green', 1);
+
+	document.body.appendChild(renderer.domElement);
+
+	createSprite();
+
+	render();
+}
+
+function createSprite(){
+	var spriteMap = new THREE.TextureLoader().load('1.png');
+
+	var spriteMaterial = new THREE.SpriteMaterial({
+		map:spriteMap,
+		color:0xffffff
+	});
+
+	var sprite = new THREE.Sprite(spriteMaterial);
+	sprite.scale.set(200,200);
+	scene.add(sprite);
+}
+function render(){
+	requestAnimationFrame(render);
+	renderer.render(scene, camera);
+}
+
+
+</script>
+</body>
+</html>

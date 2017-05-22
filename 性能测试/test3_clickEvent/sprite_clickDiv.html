@@ -1,0 +1,178 @@
+<!-- 
+	Created On 2017-05-19
+	@author:吴涛
+	@summary:sprite与point性能测试
+	@version:v0.1
+ -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>sprite_clickDiv</title>
+</head>
+<style>
+#Econtainer{
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 50px;
+	/*bottom: 0;*/
+	left: 0;
+	display: none;
+	z-index: 999;
+	/*right: 0;*/
+	/*background: red;*/
+}
+#Emask{
+	width: 100%;
+	height: 100%;
+	background: #000;
+	opacity: 0.3;
+	filter: alpha(opacity=30);
+}
+#Econtent{
+	width: 400px;
+	height: 300px;
+	/*background: red;*/
+	background: #fff;
+	position: absolute;
+	left: 50%;
+	margin-left: -200px;
+	top: 50%;
+	margin-top: -150px;
+}
+#Edemo-title{
+	height: 30px;
+	line-height: 30px;
+	background: #ccc;
+	padding: 0 10px;
+}
+#Emain{
+	background: #fff;
+	padding: 30px 0 0 30px;
+}
+#Etitle{
+	float: left;
+}
+#Eclose{
+	float: right;
+	cursor: pointer;
+}
+</style>
+<body>
+<div id="Econtainer">
+	<div id="Emask"></div>
+	<div id="Econtent">
+		<div id="Edemo-title">
+			<div id="Etitle">information</div>
+			<div id="Eclose">[X]</div>
+		</div>
+
+		<div id="Emain">
+			<p></p>
+			<p></p>
+			<p></p>
+		</div>
+	</div>
+</div>
+	<script src="../lib/three.js"></script>
+	<script src="../js/dat.gui.min.js"></script>
+	<script src="../js/stats.min.js"></script>
+	<script src="../controls/OrbitControls.js"></script>
+	<script>
+		var scene,camera,renderer;
+
+		var stats,controls,render;
+
+		var gui,guiControls;
+
+		var spriteGroup = [];
+
+		var mouse = new THREE.Vector2();
+
+		var raycaster = new THREE.Raycaster();
+
+		var oEClose = document.getElementById('Eclose');
+		var oEContainer = document.getElementById('Econtainer');
+		var oEMain = document.getElementById('Emain');
+
+		//弹层组件
+		oEClose.onclick = function(){
+			oEContainer.style.display = 'none';
+		}
+
+
+		init();
+		animate();
+
+		function init(){
+			scene = new THREE.Scene();
+
+			camera = new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight,1,1000);
+			camera.position.set(0,0,50);
+			scene.add(camera);
+
+			renderer = new THREE.WebGLRenderer();
+
+			renderer.setSize(window.innerWidth, window.innerHeight);
+			renderer.setClearColor(new THREE.Color(0xffffff,1));
+
+			document.body.appendChild(renderer.domElement);
+
+
+			stats = new Stats();
+			stats.domElement.style.position = 'absolute';
+			stats.domElement.style.top = '0px';
+			document.body.appendChild(stats.domElement);
+
+			controls = new THREE.OrbitControls(camera,renderer.domElement);
+			controls.damping = 0.2;
+
+
+
+			for(var i=0; i<10; i++){
+				var spriteMap = new THREE.TextureLoader().load('../textures/sprite0.png');
+				var spriteMat = new THREE.SpriteMaterial({
+					map:spriteMap
+				});
+
+				var sprite = new THREE.Sprite(spriteMat);
+				sprite.scale.set(10, 10, 10);
+				sprite.position.set(Math.random()*30-15,Math.random()*30-15,Math.random()*30-15);
+				spriteGroup.push(sprite);
+				scene.add(sprite);			
+			}
+
+
+			window.onclick = function(event){
+				console.log(spriteGroup);
+
+				mouse.x = (event.clientX/window.innerWidth) * 2 - 1;
+				mouse.y = - (event.clientY/window.innerHeight) * 2 + 1;
+
+				raycaster.setFromCamera(mouse, camera);
+
+				var intersects = raycaster.intersectObjects(spriteGroup);
+				// console.log(intersects);
+				for(var i=0; i<intersects.length; i++){
+					oEContainer.style.display = 'block';
+					oEMain.children[0].innerHTML = intersects;
+					return ;
+				}
+				
+			}
+
+		}
+
+		function animate(){
+			requestAnimationFrame(animate);
+			render();
+		}
+
+		function render(){
+			renderer.render(scene, camera);
+		}
+	</script>
+</body>
+</html>

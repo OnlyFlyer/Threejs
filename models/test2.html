@@ -1,0 +1,88 @@
+<!-- 
+	Created On 2017-05-04
+	@author:吴涛
+	@summary:测试专用
+	@version:v0.3
+ -->
+ 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<style>
+#Econtainer{
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 50px;
+	/*bottom: 0;*/
+	left: 0;
+	display: none;
+	/*right: 0;*/
+	/*background: red;*/
+}
+#Emask{
+	width: 100%;
+	height: 100%;
+	background: #000;
+	opacity: 0.3;
+	filter: alpha(opacity=30);
+}
+#Econtent{
+	width: 400px;
+	height: 300px;
+	/*background: red;*/
+	background: #fff;
+	position: absolute;
+	left: 50%;
+	margin-left: -200px;
+	top: 50%;
+	margin-top: -150px;
+}
+#Edemo-title{
+	height: 30px;
+	line-height: 30px;
+	background: #ccc;
+	padding: 0 10px;
+}
+#Emain{
+	background: #fff;
+	padding: 30px 0 0 30px;
+}
+#Etitle{
+	float: left;
+}
+#Eclose{
+	float: right;
+	cursor: pointer;
+}
+
+</style>
+<body>
+	<div id="Econtainer">
+		<div id="Emask"></div>
+		<div id="Econtent">
+			<div id="Edemo-title">
+				<div id="Etitle">这是一个标题</div>
+				<div id="Eclose">[X]</div>
+			</div>
+
+			<div id="Emain">内容</div>
+		</div>
+	</div>
+	<script src="../Points/lib/jquery-3.2.1.min.js"></script>
+	<script>
+		var oBtnClose = document.getElementById('Eclose');
+		var oOpen = document.getElementById('Eopen');
+		var oContainer = document.getElementById('Econtainer');
+		oBtnClose.onclick = function(){
+			oContainer.style.display = 'none';
+		};
+		oOpen.onclick = function(){
+			oContainer.style.display = 'block';
+		};
+	</script>
+</body>
+</html>
