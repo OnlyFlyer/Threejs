@@ -1,0 +1,89 @@
+<!-- 
+	Created On 2017-05-24
+	@author:吴涛
+	@summary:test测试
+ -->
+
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+ 	<meta charset="UTF-8">
+ 	<title>test</title>
+ </head>
+ <body>
+ 	<script src="./lib/three.js"></script>
+	<!-- <script src="./lib/three.min.js"></script> -->
+	<script src="./lib/stats.min.js"></script>
+
+	<script src="./collada/Animation.js"></script>
+	<script src="./collada/AnimationHandler.js"></script>
+
+	<script src="./collada/ColladaLoader.js"></script>
+
+	<script src="./collada/KeyFrameAnimation.js"></script>
+
+	<script src="./controls/OrbitControls.js"></script>
+	
+	<script src="./js/dat.gui.min.js"></script>
+ 	<script>
+ 		var scene,camera,renderer;
+
+ 		var controls,stats;
+
+ 		init();
+
+ 		animate();
+
+ 		function init(){
+
+ 			scene = new THREE.Scene();
+
+ 			camera = new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight,1,1000);
+
+ 			camera.position.set(0,0,1000);
+ 			scene.add(camera);
+
+ 			renderer = new THREE.WebGLRenderer();
+ 			renderer.setSize(window.innerWidth, window.innerHeight);
+ 			renderer.setClearColor(new THREE.Color(0xffffff,1));
+
+ 			document.body.appendChild(renderer.domElement);
+
+
+ 			controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+ 			controls.damping = 0.2;
+
+ 			stats = new Stats();
+
+ 			stats.domElement.style.position = 'absolute';
+ 			stats.domElement.style.top = '0px';
+
+ 			document.body.appendChild(stats.domElement);
+
+
+
+			var xx = new THREE.Mesh(new THREE.BoxGeometry(5,5,5),new THREE.MeshBasicMaterial({
+				color:0xff0000
+			}));
+
+			xx.position.set(0,0,0);
+			console.log(xx);
+			scene.add(xx);
+
+ 		}
+
+ 		function animate(){
+ 			requestAnimationFrame(animate);
+
+ 			render();
+ 		}
+
+ 		function render(){
+ 			renderer.render(scene, camera);
+ 		}
+
+
+ 	</script>
+ </body>
+ </html>

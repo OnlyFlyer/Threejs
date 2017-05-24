@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>test</title>
+<style>
+body{
+	font-family: monospace;
+	background: #000000;
+	margin: 0;
+	overflow: hidden;
+}
+</style>
+</head>
+<body>
+<script src="./lib/three.js"></script>
+<!-- <script src="./lib/three.min.js"></script> -->
+<script src="./lib/stats.min.js"></script>
+
+<script src="./collada/Animation.js"></script>
+<script src="./collada/AnimationHandler.js"></script>
+
+<script src="./collada/ColladaLoader.js"></script>
+
+<script src="./collada/KeyFrameAnimation.js"></script>
+
+<script src="./controls/OrbitControls.js"></script>
+<script src="./controls/FirstPersonControls.js"></script>
+
+<script src="./js/dat.gui.min.js"></script>
+
+<script>
+	var scene, camera, renderer;
+
+	var stats,controls;
+
+	var render;
+
+	var dae1,dae2;
+	var pointLight;
+
+	var clock = new THREE.Clock();
+
+	var mixers = [];
+
+	var storkGroup;
+
+	var sunLight;
+
+	var worldWidth = 128, worldDepth = 128;
+
+	var texture,SeaGeometry,SeaMaterial,SeaMesh;
+	var sunZ = -200;
+
+	var directionCol=0x0044ff, pointCol=0xff0000;
+	var guiControls,gui;
+
+	var clickGo;
+
+	var loader = new THREE.ColladaLoader();
+
+	loader.options.convertUpAxis = true;
+
+
+	//加载小船dae文件
+	loader.load('./models/boat/file.dae', function(collada){
+
+		dae1 = collada.scene;
+
+		dae1.traverse(function(child){
+			if(child instanceof THREE.SkinnedMesh){
+
+				var animation = new THREE.Animation(child, child.geometry.animation);
+				animation.play();
+			}
+		});
+
+		dae1.scale.x = dae1.scale.y = dae1.scale.z = 0.2;
+
+		// dae.position.x = -1;
+		dae1.position.set(50,-10,0);
+
+		dae1.updateMatrix();
+
+
+			//加载石头dae文件
+			loader.load('./models/stone/file.dae', function(collada){
+
+					dae2 = collada.scene;
+
+					dae2.traverse(function(child){
+						if(child instanceof THREE.SkinnedMesh){
+
+							var animation = new THREE.Animation(child, child.geometry.animation);
+							animation.play();
+						}
+					});
+
+					dae2.scale.x = dae2.scale.y = dae2.scale.z = 1;
+
+					// dae.position.x = -1;
+					dae2.position.set(0,-10,200);
+
+					dae2.updateMatrix();
+
+				init();
+
+				animate();
+
+				});		
+
+	});
+
+
+	function init(){
+
+		scene = new THREE.Scene();
+
+		scene.fog = new THREE.FogExp2( 0xaaccff, 0.0007 );
+
+		scene.add(dae1);
+		scene.add(dae2);
+
+
+		// scene.fog = new morphTargetsHREE.FogExp2(0x000000, 0.035);
+
+		camera = new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight,1,1000);
+
+		// 0,0,100
+		camera.position.set(0,50,250);
+
+		scene.add(camera);
+
+		renderer = new THREE.WebGLRenderer();
+
+		renderer.setSize(window.innerWidth, window.innerHeight);
+
+		renderer.setClearColor(new THREE.Color(0xffffff,1));
+
+		document.body.appendChild(renderer.domElement);
+
+		stats = new Stats();
+
+		stats.domElement.style.position = 'absolute';
+		stats.domElement.style.top = '0';
+		document.body.appendChild(stats.domElement);
+
+		controls = new THREE.OrbitControls(camera, renderer.domElement);
+		controls.damping = 0.2;
+
+
+		guiControls = new function(){
+			this.directionCol = directionCol;//0xff4400
+			this.pointCol = pointCol;//0xff0000
+			this.clickGo = clickGo;
+		}
+
+		gui = new dat.GUI();
+
+		gui.addColor(guiControls, 'directionCol').onChange(function(e){
+			directionalLight.color = new THREE.Color(e);
+		});
+
+		gui.addColor(guiControls, 'pointCol').onChange(function(e){
+			pointLight.color = new THREE.Color(e);
+		});
+
+		gui.add(guiControls,'clickGo').onclick(xx());
+
+		function xx(){
+			alert(1);
+		}
+		// controls = new THREE.FirstPersonControls( camera );
+
+		// controls.movementSpeed = 500;
+
+		// controls.lookSpeed = 0.1;
+
+		var loader = new THREE.JSONLoader();
+
+		storkGroup = new THREE.Group();
+		scene.add(storkGroup);
+		loader.load('./models/animated/stork.js', function(geometry, materials){
+			var material = materials[0];
+
+			material.morphTargets = true;
+			
+			// material.color.setHex(0xffaaaa);
+
+			var faceMaterial = new THREE.MeshFaceMaterial(materials);
+
+			for(var i=-30; i<-20; i+=5){
+				for(var j=0; j<80; j+=5){
+					var x = i;
+					var z = j;
+					var mesh = new THREE.Mesh(geometry, faceMaterial);
+
+					mesh.scale.set(0.02,0.02,0.02);
+
+					mesh.position.set(x,30,z);
+
+					mesh.matrixAutoUpdate = false;
+
+					mesh.updateMatrix();
+					storkGroup.add(mesh);
+					// scene.add(mesh);
+
+					var mixer = new THREE.AnimationMixer(mesh);
+
+					mixer.addAction(new THREE.AnimationAction(geometry.animations[0]).warpToDuration(1));
+
+					mixer.update(Math.random()*1000);
+
+					mixers.push(mixer);
+				}	
+			}
+
+		});
+		storkGroup.position.set(-220,30,50);
+		storkGroup.rotation.set(Math.PI/8,Math.PI/2,0);
+
+		sphere = new THREE.SphereGeometry(50,16,100,1);
+		sunLight = new THREE.Mesh(sphere, new THREE.MeshLambertMaterial({
+			color:0xff0000
+		}));
+
+		sunLight.position.set(0,100,sunZ);
+		scene.add(sunLight);
+
+		SeaGeometry = new THREE.PlaneGeometry(20000,20000,worldWidth - 1, worldDepth - 1);
+
+		// SeaGeometry.rotation.x = -Math.PI/2;
+		SeaGeometry.rotateX(-Math.PI/2);
+		// console.log(SeaGeometry.vertices);
+		for(var i=0,l = SeaGeometry.vertices.length; i<l; i ++){
+			SeaGeometry.vertices[i].y = 35*Math.sin(i/2);
+		}
+
+		texture = new THREE.TextureLoader().load('textures/water.jpg');
+		// console.log(texture);
+		texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+
+		texture.repeat.set(5, 5);
+
+		SeaMaterial = new THREE.MeshBasicMaterial({
+			color:0x0044ff,
+			map:texture
+		});
+
+		SeaMesh = new THREE.Mesh(SeaGeometry, SeaMaterial);
+		SeaMesh.position.set(0,-50,0);
+
+		scene.add(SeaMesh);
+
+		// scene.add(new THREE.AmbientLight(0xff4400));
+
+		// pointLight = new THREE.PointLight(0xff4400,5,30);
+
+		// pointLight.position.set(100,100,0);
+
+		// scene.add(pointLight);
+
+
+
+		directionalLight = new THREE.DirectionalLight( directionCol, 1 );
+		directionalLight.position.set( 0, 50, -200 ).normalize();
+		scene.add( directionalLight );
+
+		pointLight = new THREE.PointLight( pointCol, 3, 1000 );
+		scene.add( pointLight );
+
+	}
+
+function animate(){
+	requestAnimationFrame(animate);
+
+	var delta = clock.getDelta();
+	
+
+	THREE.AnimationHandler.update(delta);
+
+	for(var i=0; i<mixers.length; i++){
+		mixers[i].update(delta);
+	}
+
+	render();
+
+	stats.update();
+}
+
+function render(){
+	// var timer = Date.now() * 0.0005;
+	// camera.position.set(Math.cos(timer)*10, 4, Math.sin(timer)*10);
+	// camera.lookAt(scene.position);
+
+	var time = clock.getElapsedTime() * 10;
+
+	for(var i=0,l=SeaGeometry.vertices.length; i<l; i++){
+		SeaGeometry.vertices[i].y = 35*Math.sin(i/5+(time+i)/7);
+	}
+
+	SeaMesh.geometry.verticesNeedUpdate = true;
+
+
+	renderer.render(scene, camera);
+}
+
+</script>
+</body>
+</html>
