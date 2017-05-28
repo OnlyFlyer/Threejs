@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>dae_3</title>
+</head>
+<style>
+body{
+	font-family: monospace;
+	background: #000000;
+	margin: 0;
+	overflow: hidden;
+}
+</style>
+<body>
+	<script src="./js/three.js"></script>
+
+	<script src="./js/stats.min.js"></script>
+
+	<script src="./js/Animation.js"></script>
+	<script src="./js/AnimationHandler.js"></script>
+
+	<script src="./js/ColladaLoader.js"></script>
+
+	<script src="./js/KeyFrameAnimation.js"></script>
+
+	<script src="./js/OrbitControls.js"></script>
+
+	<script src="./js/dat.gui.min.js"></script>
+
+	<script>
+		var scene, camera, renderer;
+
+		var container, stats;
+
+		var particleLight, pointLight;
+
+		var controls;
+
+		var dae,dae1;
+
+		var clock = new THREE.Clock();
+
+		var mixers = [];
+
+		var render;
+
+
+		var loader = new THREE.ColladaLoader();
+		loader.options.convertUpAxis = true;
+
+
+		loader.load('./models/collada/monster/monster.dae', function(collada){
+
+			dae = collada.scene;
+
+			dae.traverse(function(child){
+				if(child instanceof THREE.SkinnedMesh){
+
+					var animation = new THREE.Animation(child, child.geometry.animation);
+					animation.play();
+				}
+			});
+
+			dae.scale.x = dae.scale.y = dae.scale.z = 0.002;
+
+			dae.position.x = -1;
+
+			dae.updateMatrix();
+
+
+			loader.load('./models/collada/monster/monster.dae', function(collada){
+
+				dae1 = collada.scene;
+
+				dae1.traverse(function(child){
+					if(child instanceof THREE.SkinnedMesh){
+
+						var animation = new THREE.Animation(child, child.geometry.animation);
+						animation.play();
+					}
+				});
+
+				dae1.scale.x = dae1.scale.y = dae1.scale.z = 0.002;
+
+				dae1.position.x = -1;
+
+				dae1.updateMatrix();
+
+				init();
+
+				animate();
+
+			});			
+
+
+
+		});
+
+		function init(){
+			container = document.createElement('div');
+			document.body.appendChild(container);
+
+			camera = new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight,1,1000);
+
+			camera.position.set(10,5,0);
+
+			scene = new THREE.Scene();
+			scene.fog = new THREE.FogExp2(0x000000, 0.035);
+
+			scene.add(dae);
+
+			dae1.position.set(0,-5,0);
+			scene.add(dae1);
+
+			scene.add(new THREE.AmbientLight(0xcccccc));
+
+			pointLight = new THREE.PointLight(0xff4400,5,30);
+
+			pointLight.position.set(5,0,0);
+
+			scene.add(pointLight);
+
+			renderer = new THREE.WebGLRenderer();
+
+			renderer.setSize(window.innerWidth, window.innerHeight);
+
+			renderer.setClearColor(new THREE.Color(0xffffff,1));
+			// renderer.setPixelRatio( window.devicePixelRatio );
+
+			container.appendChild(renderer.domElement);
+
+			controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+			controls.damping = 0.2;
+
+			stats = new Stats();
+			stats.domElement.style.position = 'absolute';
+			stats.domElement.style.top = '0';
+			container.appendChild(stats.domElement);
+
+		}
+
+		function animate(){
+			requestAnimationFrame(animate);
+
+			var delta = clock.getDelta();
+
+			THREE.AnimationHandler.update(delta);
+
+			for(var i=0; i<mixers.length; i++){
+				mixers[i].update(delta);
+			}
+
+			render();
+
+			stats.update();
+		}
+
+		function render(){
+			// var timer = Date.now() * 0.0005;
+
+			// camera.position.set(Math.cos(timer)*10, 4, Math.sin(timer)*10);
+
+			// camera.lookAt(scene.position);
+
+			renderer.render(scene, camera);
+		}
+	</script>
+</body>
+</html>
